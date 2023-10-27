@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang = "EN">
+<head>
+	<title>Numble</title>
+	<h1>Numble</h1>
+</head>
+<body>
+	<p id = "score">Current score: 0 pts</p>
+	<p id = "code">Type in...</p>
+	<button onclick = "clk(1)">1</button>
+	<button onclick = "clk(2)">2</button>
+	<button onclick = "clk(3)">3</button><br>
+	<button onclick = "clk(4)">4</button>
+	<button onclick = "clk(5)">5</button>
+	<button onclick = "clk(6)">6</button><br>
+	<button onclick = "clk(7)">7</button>
+	<button onclick = "clk(8)">8</button>
+	<button onclick = "clk(9)">9</button><br>
+	<button onclick = "clk(0)">0</button>
+	<button onclick = "backspace()">x</button>
+	<button onclick = "submit()">Submit</button>
+	<p>Histories:</p>
+	<p id = "history"></p>
+
+<script>
+
+var n = prompt("Input number of digits:", 6)
+var hr_pos = 0
+var ans_code = []
+ans_code.length = n
+var ans_key = []
+ans_key.length = n
+for(let i = 0; i < n; i++) {
+	ans_key[i] = Math.floor(Math.random() * 10)	
+}
+var tot_score = 0
+var winned = false
+
+function get_code() {
+	if(hr_pos == 0) {
+		return "Type in..."
+	} else {
+		var disp = ""
+		for(let i = 0; i < hr_pos; i++) {
+			disp += ans_code[i]
+		}
+		return disp
+	}
+}
+function get_score() {
+	var cur_score = 0
+	for(let i = 0; i < n; i++) {
+		if(ans_code[i] == ans_key[i]) {
+			cur_score++
+		}
+	}
+
+	for(let t = 0; t < 10; t++) {
+		var cnt_code = 0, cnt_ans = 0
+		for(let i = 0; i < n; i++) {
+			if(ans_code[i] == t) {
+				cnt_code++
+			}
+			if(ans_key[i] == t) {
+				cnt_ans++
+			}
+		}
+		cur_score += Math.min(cnt_code, cnt_ans)
+	}
+
+	return cur_score
+}
+
+function rfr_code() {
+	document.getElementById("code").innerHTML = get_code()
+}
+function clk(x) {
+	if(hr_pos < n) {
+		ans_code[hr_pos] = x
+		hr_pos++
+		rfr_code()
+	}
+}
+function backspace() {
+	hr_pos--
+	rfr_code()
+}
+function submit() {
+	if(hr_pos == n) {
+		var cur_score = get_score()
+		document.getElementById("history").innerHTML += get_code() + "  " + cur_score + " pts<br>"
+		if(!winned) {
+			tot_score += n * 2 - cur_score
+			document.getElementById("score").innerHTML = "Current score: " + tot_score + " pts"
+		}
+		ans_code = []
+		ans_code.length = n
+		hr_pos = 0
+		rfr_code()
+		if(cur_score == n * 2) {
+			winned = true
+		}
+	}
+}
+
+</script>
+</body>
+</html>
