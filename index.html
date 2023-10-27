@@ -82,7 +82,9 @@ function clk(x) {
 	}
 }
 function backspace() {
-	hr_pos--
+	if(hr_pos > 0) {
+		hr_pos--
+	}
 	rfr_code()
 }
 function submit() {
